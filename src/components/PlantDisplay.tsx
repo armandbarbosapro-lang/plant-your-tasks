@@ -378,15 +378,6 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
         {/* Frog near water */}
         <PixelFrog x={46} y={106} />
 
-        {/* Butterflies */}
-        <PixelButterfly delay={0} x={60} y={50} color="hsl(280, 70%, 65%)" color2="hsl(300, 60%, 75%)" />
-        <PixelButterfly delay={2.5} x={130} y={55} color="hsl(200, 70%, 60%)" color2="hsl(180, 60%, 70%)" />
-        <PixelButterfly delay={4} x={90} y={40} color="hsl(40, 80%, 60%)" color2="hsl(50, 70%, 70%)" />
-
-        {/* Birds */}
-        <PixelBird delay={0} startX={-20} y={12} />
-        <PixelBird delay={5} startX={-30} y={22} />
-
         {/* Fireflies */}
         <Firefly x={50} y={88} delay={0} />
         <Firefly x={140} y={85} delay={1} />
