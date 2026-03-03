@@ -24,7 +24,7 @@ const useAmbientSound = (isNight: boolean) => {
   }, []);
 
   // Note frequency helper
-  const noteFreq = (note: number) => 440 * Math.pow(2, (note - 69) / 12);
+  const noteFreq = useCallback((note: number) => 440 * Math.pow(2, (note - 69) / 12), []);
 
   // Play a single 8-bit note
   const playNote = useCallback((freq: number, startTime: number, duration: number, volume: number, type: OscillatorType = "square") => {
