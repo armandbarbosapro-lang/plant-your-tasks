@@ -46,7 +46,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8 max-w-md mx-auto">
       {/* Plant */}
-      <div className="mb-6 mt-4">
+      <div className="mb-8 mt-6">
         <PlantDisplay completedCount={completedCount} totalCount={tasks.length} />
       </div>
 
