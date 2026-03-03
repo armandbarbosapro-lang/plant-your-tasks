@@ -5,91 +5,94 @@ interface PlantDisplayProps {
   totalCount: number;
 }
 
-// Each plant template draws progressively more as stage increases (0-12)
+const P = (x: number, y: number, w: number, h: number, fill: string) => (
+  <rect x={x} y={y} width={w} height={h} fill={fill} />
+);
+
 const PLANT_TEMPLATES = [
-  // Sunflower
+  // Crystal Tree - magical glowing tree
   (s: number) => (
-    <g key="sun">
-      {s >= 1 && <rect x="15" y="28" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 2 && <rect x="15" y="24" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 3 && <rect x="15" y="20" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 4 && <><rect x="11" y="24" width="4" height="2" fill="hsl(142, 45%, 40%)" /></>}
-      {s >= 5 && <rect x="17" y="22" width="4" height="2" fill="hsl(142, 45%, 40%)" />}
-      {s >= 6 && <rect x="15" y="16" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 7 && <><rect x="14" y="12" width="4" height="4" fill="hsl(35, 70%, 40%)" /></>}
-      {s >= 8 && <><rect x="12" y="10" width="2" height="4" fill="hsl(45, 85%, 55%)" /><rect x="18" y="10" width="2" height="4" fill="hsl(45, 85%, 55%)" /></>}
-      {s >= 9 && <><rect x="14" y="8" width="4" height="2" fill="hsl(45, 85%, 55%)" /><rect x="14" y="16" width="4" height="2" fill="hsl(45, 85%, 55%)" /></>}
-      {s >= 10 && <><rect x="12" y="8" width="2" height="2" fill="hsl(45, 90%, 58%)" /><rect x="18" y="8" width="2" height="2" fill="hsl(45, 90%, 58%)" /></>}
-      {s >= 11 && <><rect x="12" y="14" width="2" height="2" fill="hsl(45, 90%, 58%)" /><rect x="18" y="14" width="2" height="2" fill="hsl(45, 90%, 58%)" /></>}
-      {s >= 12 && <><rect x="9" y="20" width="2" height="2" fill="hsl(142, 45%, 42%)" /><rect x="21" y="18" width="2" height="2" fill="hsl(142, 45%, 42%)" /></>}
+    <g key="crystal">
+      {s >= 1 && P(30, 56, 4, 8, "hsl(270, 30%, 35%)")}
+      {s >= 2 && P(30, 48, 4, 8, "hsl(270, 35%, 38%)")}
+      {s >= 3 && P(30, 40, 4, 8, "hsl(270, 35%, 38%)")}
+      {s >= 4 && <>{P(24, 46, 6, 3, "hsl(280, 50%, 55%)")}{P(34, 44, 6, 3, "hsl(280, 50%, 55%)")}</>}
+      {s >= 5 && P(30, 32, 4, 8, "hsl(270, 38%, 40%)")}
+      {s >= 6 && <>{P(22, 38, 8, 3, "hsl(280, 55%, 58%)")}{P(34, 36, 8, 3, "hsl(280, 55%, 58%)")}</>}
+      {s >= 7 && <>{P(26, 28, 12, 4, "hsl(270, 60%, 60%)")}{P(28, 24, 8, 4, "hsl(270, 65%, 65%)")}</>}
+      {s >= 8 && <>{P(24, 22, 4, 6, "hsl(290, 60%, 62%)")}{P(36, 22, 4, 6, "hsl(290, 60%, 62%)")}</>}
+      {s >= 9 && <>{P(30, 18, 4, 6, "hsl(280, 70%, 68%)")}{P(22, 26, 4, 4, "hsl(290, 55%, 58%)")}{P(38, 26, 4, 4, "hsl(290, 55%, 58%)")}</>}
+      {s >= 10 && <>{P(28, 14, 8, 4, "hsl(270, 75%, 72%)")}{P(20, 20, 4, 4, "hsl(300, 60%, 65%)")}{P(40, 20, 4, 4, "hsl(300, 60%, 65%)")}</>}
+      {s >= 11 && <>{P(18, 16, 4, 4, "hsl(300, 65%, 70%)")}{P(42, 16, 4, 4, "hsl(300, 65%, 70%)")}{P(30, 10, 4, 4, "hsl(280, 80%, 75%)")}</>}
+      {s >= 12 && <>{P(16, 12, 2, 2, "hsl(50, 90%, 80%)")}{P(46, 10, 2, 2, "hsl(50, 90%, 80%)")}{P(24, 8, 2, 2, "hsl(50, 90%, 80%)")}{P(40, 14, 2, 2, "hsl(50, 90%, 80%)")}{P(32, 6, 2, 2, "hsl(50, 95%, 85%)")}</>}
     </g>
   ),
-  // Tulip
+  // Fire Flower - blazing magical flower
   (s: number) => (
-    <g key="tulip">
-      {s >= 1 && <rect x="15" y="28" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 2 && <rect x="15" y="24" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 3 && <rect x="15" y="20" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 4 && <rect x="11" y="26" width="4" height="2" fill="hsl(142, 45%, 40%)" />}
-      {s >= 5 && <rect x="17" y="24" width="4" height="2" fill="hsl(142, 45%, 40%)" />}
-      {s >= 6 && <rect x="15" y="16" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 7 && <rect x="13" y="12" width="6" height="4" fill="hsl(340, 65%, 55%)" />}
-      {s >= 8 && <><rect x="11" y="14" width="2" height="2" fill="hsl(340, 60%, 50%)" /><rect x="19" y="14" width="2" height="2" fill="hsl(340, 60%, 50%)" /></>}
-      {s >= 9 && <rect x="15" y="10" width="2" height="2" fill="hsl(340, 70%, 60%)" />}
-      {s >= 10 && <><rect x="13" y="10" width="2" height="2" fill="hsl(340, 65%, 55%)" /><rect x="17" y="10" width="2" height="2" fill="hsl(340, 65%, 55%)" /></>}
-      {s >= 11 && <><rect x="11" y="12" width="2" height="2" fill="hsl(340, 55%, 48%)" /><rect x="19" y="12" width="2" height="2" fill="hsl(340, 55%, 48%)" /></>}
-      {s >= 12 && <><rect x="9" y="22" width="2" height="4" fill="hsl(142, 42%, 38%)" /><rect x="21" y="20" width="2" height="4" fill="hsl(142, 42%, 38%)" /></>}
+    <g key="fire">
+      {s >= 1 && P(30, 56, 4, 8, "hsl(142, 40%, 30%)")}
+      {s >= 2 && P(30, 48, 4, 8, "hsl(142, 42%, 32%)")}
+      {s >= 3 && P(30, 40, 4, 8, "hsl(142, 42%, 32%)")}
+      {s >= 4 && <>{P(24, 50, 6, 3, "hsl(142, 38%, 35%)")}{P(34, 48, 6, 3, "hsl(142, 38%, 35%)")}</>}
+      {s >= 5 && P(30, 32, 4, 8, "hsl(142, 44%, 34%)")}
+      {s >= 6 && <>{P(22, 42, 8, 3, "hsl(142, 40%, 38%)")}{P(34, 38, 8, 3, "hsl(142, 40%, 38%)")}</>}
+      {s >= 7 && <>{P(28, 26, 8, 6, "hsl(25, 80%, 50%)")}</>}
+      {s >= 8 && <>{P(24, 22, 6, 6, "hsl(10, 75%, 50%)")}{P(34, 22, 6, 6, "hsl(10, 75%, 50%)")}</>}
+      {s >= 9 && <>{P(28, 18, 8, 4, "hsl(40, 90%, 55%)")}{P(22, 18, 4, 4, "hsl(15, 80%, 52%)")}{P(38, 18, 4, 4, "hsl(15, 80%, 52%)")}</>}
+      {s >= 10 && <>{P(26, 14, 12, 4, "hsl(45, 95%, 60%)")}{P(20, 16, 4, 4, "hsl(5, 70%, 48%)")}{P(40, 16, 4, 4, "hsl(5, 70%, 48%)")}</>}
+      {s >= 11 && <>{P(28, 10, 8, 4, "hsl(50, 95%, 65%)")}{P(24, 12, 4, 4, "hsl(30, 85%, 55%)")}{P(36, 12, 4, 4, "hsl(30, 85%, 55%)")}</>}
+      {s >= 12 && <>{P(30, 6, 4, 4, "hsl(55, 100%, 70%)")}{P(18, 14, 2, 2, "hsl(45, 90%, 70%)")}{P(44, 12, 2, 2, "hsl(45, 90%, 70%)")}{P(26, 8, 2, 2, "hsl(50, 95%, 72%)")}{P(38, 8, 2, 2, "hsl(50, 95%, 72%)")}</>}
     </g>
   ),
-  // Cactus
+  // Moon Bloom - ethereal night flower
   (s: number) => (
-    <g key="cactus">
-      {s >= 1 && <rect x="14" y="28" width="4" height="4" fill="hsl(142, 40%, 40%)" />}
-      {s >= 2 && <rect x="14" y="24" width="4" height="4" fill="hsl(142, 40%, 40%)" />}
-      {s >= 3 && <rect x="14" y="20" width="4" height="4" fill="hsl(142, 38%, 38%)" />}
-      {s >= 4 && <rect x="14" y="16" width="4" height="4" fill="hsl(142, 38%, 38%)" />}
-      {s >= 5 && <rect x="10" y="22" width="4" height="4" fill="hsl(142, 36%, 36%)" />}
-      {s >= 6 && <rect x="18" y="20" width="4" height="4" fill="hsl(142, 36%, 36%)" />}
-      {s >= 7 && <rect x="10" y="18" width="4" height="4" fill="hsl(142, 34%, 34%)" />}
-      {s >= 8 && <rect x="18" y="16" width="4" height="4" fill="hsl(142, 34%, 34%)" />}
-      {s >= 9 && <rect x="14" y="12" width="4" height="4" fill="hsl(142, 38%, 38%)" />}
-      {s >= 10 && <rect x="14" y="10" width="4" height="2" fill="hsl(320, 60%, 55%)" />}
-      {s >= 11 && <><rect x="12" y="10" width="2" height="2" fill="hsl(320, 65%, 60%)" /><rect x="18" y="10" width="2" height="2" fill="hsl(320, 65%, 60%)" /></>}
-      {s >= 12 && <rect x="15" y="8" width="2" height="2" fill="hsl(320, 70%, 65%)" />}
+    <g key="moon">
+      {s >= 1 && P(30, 56, 4, 8, "hsl(200, 30%, 30%)")}
+      {s >= 2 && P(30, 48, 4, 8, "hsl(200, 32%, 32%)")}
+      {s >= 3 && P(30, 40, 4, 8, "hsl(200, 34%, 34%)")}
+      {s >= 4 && <>{P(24, 48, 6, 3, "hsl(210, 40%, 40%)")}{P(34, 44, 6, 3, "hsl(210, 40%, 40%)")}</>}
+      {s >= 5 && P(30, 32, 4, 8, "hsl(200, 34%, 34%)")}
+      {s >= 6 && <>{P(20, 40, 10, 3, "hsl(210, 42%, 42%)")}{P(34, 36, 10, 3, "hsl(210, 42%, 42%)")}</>}
+      {s >= 7 && <>{P(26, 24, 12, 8, "hsl(230, 50%, 55%)")}</>}
+      {s >= 8 && <>{P(22, 22, 6, 6, "hsl(240, 55%, 60%)")}{P(36, 22, 6, 6, "hsl(240, 55%, 60%)")}</>}
+      {s >= 9 && <>{P(28, 16, 8, 8, "hsl(220, 60%, 65%)")}</>}
+      {s >= 10 && <>{P(22, 16, 6, 6, "hsl(250, 55%, 62%)")}{P(36, 16, 6, 6, "hsl(250, 55%, 62%)")}{P(28, 12, 8, 4, "hsl(220, 65%, 70%)")}</>}
+      {s >= 11 && <>{P(30, 8, 4, 4, "hsl(210, 70%, 75%)")}{P(20, 14, 4, 4, "hsl(260, 55%, 65%)")}{P(40, 14, 4, 4, "hsl(260, 55%, 65%)")}</>}
+      {s >= 12 && <>{P(18, 10, 2, 2, "hsl(190, 80%, 80%)")}{P(44, 8, 2, 2, "hsl(190, 80%, 80%)")}{P(32, 4, 2, 2, "hsl(190, 85%, 85%)")}{P(24, 6, 2, 2, "hsl(190, 80%, 80%)")}{P(40, 6, 2, 2, "hsl(190, 80%, 80%)")}</>}
     </g>
   ),
-  // Daisy
+  // Enchanted Vine - sprawling magical vine
   (s: number) => (
-    <g key="daisy">
-      {s >= 1 && <rect x="15" y="28" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 2 && <rect x="15" y="24" width="2" height="4" fill="hsl(142, 50%, 35%)" />}
-      {s >= 3 && <rect x="15" y="20" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 4 && <rect x="11" y="26" width="4" height="2" fill="hsl(142, 45%, 42%)" />}
-      {s >= 5 && <rect x="17" y="22" width="4" height="2" fill="hsl(142, 45%, 42%)" />}
-      {s >= 6 && <rect x="15" y="16" width="2" height="4" fill="hsl(142, 48%, 33%)" />}
-      {s >= 7 && <rect x="14" y="12" width="4" height="4" fill="hsl(45, 80%, 55%)" />}
-      {s >= 8 && <><rect x="12" y="14" width="2" height="2" fill="hsl(0, 0%, 92%)" /><rect x="18" y="14" width="2" height="2" fill="hsl(0, 0%, 92%)" /></>}
-      {s >= 9 && <><rect x="14" y="10" width="4" height="2" fill="hsl(0, 0%, 92%)" /><rect x="14" y="16" width="4" height="2" fill="hsl(0, 0%, 92%)" /></>}
-      {s >= 10 && <><rect x="12" y="12" width="2" height="2" fill="hsl(0, 0%, 92%)" /><rect x="18" y="12" width="2" height="2" fill="hsl(0, 0%, 92%)" /></>}
-      {s >= 11 && <><rect x="12" y="16" width="2" height="2" fill="hsl(0, 0%, 92%)" /><rect x="18" y="16" width="2" height="2" fill="hsl(0, 0%, 92%)" /></>}
-      {s >= 12 && <><rect x="9" y="20" width="2" height="2" fill="hsl(142, 40%, 38%)" /><rect x="21" y="18" width="2" height="2" fill="hsl(142, 40%, 38%)" /></>}
+    <g key="vine">
+      {s >= 1 && P(30, 56, 4, 8, "hsl(150, 50%, 30%)")}
+      {s >= 2 && P(30, 48, 4, 8, "hsl(150, 50%, 30%)")}
+      {s >= 3 && <>{P(26, 44, 4, 8, "hsl(150, 48%, 32%)")}{P(34, 40, 4, 8, "hsl(150, 48%, 32%)")}</>}
+      {s >= 4 && <>{P(22, 40, 4, 6, "hsl(150, 46%, 34%)")}{P(38, 36, 4, 6, "hsl(150, 46%, 34%)")}</>}
+      {s >= 5 && <>{P(18, 36, 4, 6, "hsl(150, 44%, 36%)")}{P(42, 32, 4, 6, "hsl(150, 44%, 36%)")}</>}
+      {s >= 6 && <>{P(16, 34, 6, 4, "hsl(160, 55%, 45%)")}{P(42, 30, 6, 4, "hsl(160, 55%, 45%)")}</>}
+      {s >= 7 && <>{P(14, 30, 6, 4, "hsl(160, 55%, 45%)")}{P(44, 26, 6, 4, "hsl(160, 55%, 45%)")}</>}
+      {s >= 8 && <>{P(20, 30, 4, 4, "hsl(330, 60%, 55%)")}{P(40, 26, 4, 4, "hsl(330, 60%, 55%)")}</>}
+      {s >= 9 && <>{P(14, 26, 4, 4, "hsl(50, 80%, 55%)")}{P(46, 22, 4, 4, "hsl(50, 80%, 55%)")}</>}
+      {s >= 10 && <>{P(28, 28, 8, 8, "hsl(310, 60%, 55%)")}</>}
+      {s >= 11 && <>{P(26, 22, 12, 6, "hsl(310, 65%, 60%)")}{P(30, 18, 4, 4, "hsl(310, 70%, 65%)")}</>}
+      {s >= 12 && <>{P(12, 24, 2, 2, "hsl(50, 90%, 75%)")}{P(50, 20, 2, 2, "hsl(50, 90%, 75%)")}{P(30, 14, 4, 4, "hsl(320, 75%, 70%)")}{P(22, 20, 2, 2, "hsl(50, 90%, 75%)")}{P(42, 18, 2, 2, "hsl(50, 90%, 75%)")}</>}
     </g>
   ),
-  // Rose
+  // Star Blossom - cosmic flower
   (s: number) => (
-    <g key="rose">
-      {s >= 1 && <rect x="15" y="28" width="2" height="4" fill="hsl(142, 50%, 30%)" />}
-      {s >= 2 && <rect x="15" y="24" width="2" height="4" fill="hsl(142, 50%, 30%)" />}
-      {s >= 3 && <rect x="15" y="20" width="2" height="4" fill="hsl(142, 48%, 28%)" />}
-      {s >= 4 && <><rect x="13" y="26" width="2" height="2" fill="hsl(142, 40%, 35%)" /><rect x="11" y="24" width="2" height="2" fill="hsl(142, 40%, 35%)" /></>}
-      {s >= 5 && <><rect x="17" y="24" width="2" height="2" fill="hsl(142, 40%, 35%)" /><rect x="19" y="22" width="2" height="2" fill="hsl(142, 40%, 35%)" /></>}
-      {s >= 6 && <rect x="15" y="16" width="2" height="4" fill="hsl(142, 48%, 28%)" />}
-      {s >= 7 && <rect x="13" y="12" width="6" height="4" fill="hsl(350, 55%, 48%)" />}
-      {s >= 8 && <rect x="15" y="10" width="2" height="2" fill="hsl(350, 60%, 52%)" />}
-      {s >= 9 && <><rect x="11" y="14" width="2" height="2" fill="hsl(350, 50%, 44%)" /><rect x="19" y="14" width="2" height="2" fill="hsl(350, 50%, 44%)" /></>}
-      {s >= 10 && <><rect x="11" y="12" width="2" height="2" fill="hsl(350, 50%, 44%)" /><rect x="19" y="12" width="2" height="2" fill="hsl(350, 50%, 44%)" /></>}
-      {s >= 11 && <><rect x="13" y="10" width="2" height="2" fill="hsl(350, 58%, 50%)" /><rect x="17" y="10" width="2" height="2" fill="hsl(350, 58%, 50%)" /></>}
-      {s >= 12 && <><rect x="9" y="18" width="2" height="4" fill="hsl(142, 38%, 32%)" /><rect x="21" y="16" width="2" height="4" fill="hsl(142, 38%, 32%)" /></>}
+    <g key="star">
+      {s >= 1 && P(30, 56, 4, 8, "hsl(170, 40%, 30%)")}
+      {s >= 2 && P(30, 48, 4, 8, "hsl(170, 42%, 32%)")}
+      {s >= 3 && P(30, 40, 4, 8, "hsl(170, 44%, 34%)")}
+      {s >= 4 && <>{P(24, 48, 6, 3, "hsl(170, 50%, 40%)")}{P(34, 44, 6, 3, "hsl(170, 50%, 40%)")}</>}
+      {s >= 5 && P(30, 32, 4, 8, "hsl(170, 44%, 34%)")}
+      {s >= 6 && <>{P(22, 40, 8, 3, "hsl(170, 50%, 42%)")}{P(34, 36, 8, 3, "hsl(170, 50%, 42%)")}</>}
+      {s >= 7 && <>{P(28, 24, 8, 8, "hsl(180, 60%, 50%)")}</>}
+      {s >= 8 && <>{P(22, 24, 6, 4, "hsl(190, 55%, 48%)")}{P(36, 24, 6, 4, "hsl(190, 55%, 48%)")}</>}
+      {s >= 9 && <>{P(30, 18, 4, 6, "hsl(180, 65%, 55%)")}{P(22, 18, 4, 6, "hsl(200, 55%, 50%)")}{P(38, 18, 4, 6, "hsl(200, 55%, 50%)")}</>}
+      {s >= 10 && <>{P(26, 14, 12, 4, "hsl(180, 70%, 58%)")}{P(20, 16, 4, 6, "hsl(210, 55%, 52%)")}{P(40, 16, 4, 6, "hsl(210, 55%, 52%)")}</>}
+      {s >= 11 && <>{P(28, 10, 8, 4, "hsl(175, 75%, 62%)")}{P(18, 12, 4, 4, "hsl(200, 60%, 55%)")}{P(42, 12, 4, 4, "hsl(200, 60%, 55%)")}</>}
+      {s >= 12 && <>{P(30, 6, 4, 4, "hsl(170, 80%, 68%)")}{P(16, 8, 2, 2, "hsl(55, 90%, 80%)")}{P(46, 8, 2, 2, "hsl(55, 90%, 80%)")}{P(22, 6, 2, 2, "hsl(55, 90%, 80%)")}{P(40, 6, 2, 2, "hsl(55, 90%, 80%)")}{P(32, 2, 2, 2, "hsl(55, 95%, 85%)")}</>}
     </g>
   ),
 ];
@@ -100,16 +103,15 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
     return seed % PLANT_TEMPLATES.length;
   }, [totalCount]);
 
-  // Stage = completedCount directly (0 to 12)
   const stage = completedCount;
 
   if (totalCount === 0 || completedCount === 0) {
     return (
       <div className="flex flex-col items-center">
-        <div className="w-20 h-20 flex items-center justify-center">
-          <svg viewBox="0 0 32 32" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
-            <rect x="14" y="28" width="4" height="3" fill="hsl(30, 40%, 45%)" />
-            <rect x="15" y="27" width="2" height="1" fill="hsl(30, 35%, 40%)" />
+        <div className="w-40 h-40 flex items-center justify-center">
+          <svg viewBox="0 0 64 64" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
+            <rect x="28" y="54" width="8" height="6" fill="hsl(30, 40%, 45%)" />
+            <rect x="30" y="52" width="4" height="2" fill="hsl(30, 35%, 40%)" />
           </svg>
         </div>
       </div>
@@ -120,8 +122,8 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-20 h-20 flex items-center justify-center">
-        <svg viewBox="0 0 32 32" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
+      <div className="w-40 h-40 flex items-center justify-center">
+        <svg viewBox="0 0 64 64" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
           {renderPlant(stage)}
         </svg>
       </div>
