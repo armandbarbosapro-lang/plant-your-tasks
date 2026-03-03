@@ -372,7 +372,7 @@ const FireFlower = (s: number, cx: number) => {
 const PLANT_TEMPLATES = [MagicalGardenRose, CrystalTree, FireFlower];
 
 const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount }) => {
-  const dayProgress = useTimeOfDay();
+  const { dayProgress } = useTimeOfDay();
   const isNight = dayProgress < 0.4;
 
   const plantIndex = useMemo(() => {
