@@ -45,24 +45,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8 max-w-md mx-auto">
-      {/* Header */}
-      <h1 className="text-2xl font-bold text-foreground mb-1">🌱 Bloom</h1>
-      <p className="text-xs text-muted-foreground mb-6">Fais pousser ta journée</p>
-
       {/* Plant */}
-      <div className="mb-6">
+      <div className="mb-6 mt-4">
         <PlantDisplay completedCount={completedCount} totalCount={tasks.length} />
       </div>
-
-      {/* Progress bar */}
-      {tasks.length > 0 && (
-        <div className="w-full h-2 rounded-full bg-secondary mb-6 overflow-hidden">
-          <div
-            className="h-full bg-primary rounded-full transition-all duration-500"
-            style={{ width: `${tasks.length ? (completedCount / tasks.length) * 100 : 0}%` }}
-          />
-        </div>
-      )}
 
       {/* Task list */}
       <div className="w-full space-y-2 mb-4">
@@ -77,13 +63,13 @@ const Index = () => {
           >
             <button
               onClick={() => toggleTask(task.id)}
-              className={`w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
+              className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${
                 task.done
                   ? "bg-primary border-primary text-primary-foreground"
                   : "border-muted-foreground/30"
               }`}
             >
-              {task.done && <span className="text-xs">✓</span>}
+              {task.done && <span className="text-[10px]">✓</span>}
             </button>
             <span className={`flex-1 text-sm ${task.done ? "line-through text-muted-foreground" : "text-foreground"}`}>
               {task.text}
@@ -92,7 +78,7 @@ const Index = () => {
               onClick={() => deleteTask(task.id)}
               className="text-muted-foreground/40 hover:text-destructive transition-colors p-1"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}
@@ -124,13 +110,9 @@ const Index = () => {
             className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-muted-foreground/30 text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Ajouter une tâche
+            Ajouter
           </button>
         )
-      )}
-
-      {tasks.length >= MAX_TASKS && !showInput && (
-        <p className="text-xs text-muted-foreground mt-2">Maximum 12 tâches atteint</p>
       )}
 
       {/* Clear all */}
@@ -140,7 +122,7 @@ const Index = () => {
           className="mt-6 flex items-center gap-1 text-xs text-muted-foreground/50 hover:text-destructive transition-colors"
         >
           <Trash2 className="w-3 h-3" />
-          Tout effacer
+          Effacer
         </button>
       )}
     </div>
