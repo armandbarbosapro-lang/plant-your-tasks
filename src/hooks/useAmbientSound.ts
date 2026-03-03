@@ -1,20 +1,20 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 
-// 8-bit ambient sound generator using Web Audio API
+// 8-bit Zelda-style chill music generator
 const useAmbientSound = (isNight: boolean) => {
   const ctxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<GainNode | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const loopRef = useRef<number | null>(null);
   const [muted, setMuted] = useState(() => {
     const saved = localStorage.getItem("bloom-sound-muted");
-    return saved ? saved === "true" : true; // muted by default
+    return saved ? saved === "true" : true;
   });
 
   const getCtx = useCallback(() => {
     if (!ctxRef.current) {
       ctxRef.current = new AudioContext();
       gainRef.current = ctxRef.current.createGain();
-      gainRef.current.gain.value = 0.08;
+      gainRef.current.gain.value = 0.06;
       gainRef.current.connect(ctxRef.current.destination);
     }
     if (ctxRef.current.state === "suspended") {
@@ -23,107 +23,176 @@ const useAmbientSound = (isNight: boolean) => {
     return { ctx: ctxRef.current, gain: gainRef.current! };
   }, []);
 
-  // 8-bit bird chirp
-  const playBirdChirp = useCallback(() => {
+  // Note frequency helper
+  const noteFreq = (note: number) => 440 * Math.pow(2, (note - 69) / 12);
+
+  // Play a single 8-bit note
+  const playNote = useCallback((freq: number, startTime: number, duration: number, volume: number, type: OscillatorType = "square") => {
     const { ctx, gain } = getCtx();
-    const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const env = ctx.createGain();
-    osc.type = "square";
-    // Random chirp pattern
-    const baseFreq = 800 + Math.random() * 600;
-    osc.frequency.setValueAtTime(baseFreq, now);
-    osc.frequency.linearRampToValueAtTime(baseFreq + 200 + Math.random() * 300, now + 0.05);
-    osc.frequency.linearRampToValueAtTime(baseFreq - 100, now + 0.1);
-    osc.frequency.linearRampToValueAtTime(baseFreq + 400, now + 0.15);
-    osc.frequency.linearRampToValueAtTime(baseFreq, now + 0.2);
-    env.gain.setValueAtTime(0.3, now);
-    env.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    env.gain.setValueAtTime(0, startTime);
+    env.gain.linearRampToValueAtTime(volume, startTime + 0.02);
+    env.gain.setValueAtTime(volume, startTime + duration * 0.6);
+    env.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
     osc.connect(env);
     env.connect(gain);
-    osc.start(now);
-    osc.stop(now + 0.25);
-
-    // Sometimes add a second chirp
-    if (Math.random() > 0.5) {
-      const osc2 = ctx.createOscillator();
-      const env2 = ctx.createGain();
-      osc2.type = "square";
-      const t = now + 0.3;
-      osc2.frequency.setValueAtTime(baseFreq + 100, t);
-      osc2.frequency.linearRampToValueAtTime(baseFreq + 500, t + 0.06);
-      osc2.frequency.linearRampToValueAtTime(baseFreq + 200, t + 0.12);
-      env2.gain.setValueAtTime(0.25, t);
-      env2.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
-      osc2.connect(env2);
-      env2.connect(gain);
-      osc2.start(t);
-      osc2.stop(t + 0.15);
-    }
+    osc.start(startTime);
+    osc.stop(startTime + duration);
   }, [getCtx]);
 
-  // 8-bit cricket chirp
-  const playCricketChirp = useCallback(() => {
-    const { ctx, gain } = getCtx();
+  // Day melody - peaceful Zelda village style (pentatonic, slow, dreamy)
+  const playDayLoop = useCallback(() => {
+    const { ctx } = getCtx();
     const now = ctx.currentTime;
-    const chirps = 3 + Math.floor(Math.random() * 3);
-    for (let i = 0; i < chirps; i++) {
-      const osc = ctx.createOscillator();
-      const env = ctx.createGain();
-      osc.type = "square";
-      const t = now + i * 0.08;
-      osc.frequency.setValueAtTime(4200 + Math.random() * 400, t);
-      env.gain.setValueAtTime(0.12, t);
-      env.gain.exponentialRampToValueAtTime(0.01, t + 0.04);
-      osc.connect(env);
-      env.connect(gain);
-      osc.start(t);
-      osc.stop(t + 0.05);
-    }
-  }, [getCtx]);
+    const bpm = 70;
+    const beat = 60 / bpm;
+
+    // C major pentatonic melody - gentle, wistful
+    // MIDI: C5=72, D5=74, E5=76, G5=79, A5=81, C6=84
+    const melodyNotes = [
+      // Phrase 1
+      { note: 72, time: 0, dur: beat * 2 },
+      { note: 76, time: beat * 2, dur: beat * 1.5 },
+      { note: 74, time: beat * 3.5, dur: beat },
+      { note: 72, time: beat * 4.5, dur: beat * 1.5 },
+      // Phrase 2
+      { note: 79, time: beat * 6.5, dur: beat * 2 },
+      { note: 76, time: beat * 8.5, dur: beat },
+      { note: 74, time: beat * 9.5, dur: beat * 2 },
+      // Phrase 3
+      { note: 72, time: beat * 12, dur: beat * 1.5 },
+      { note: 74, time: beat * 13.5, dur: beat },
+      { note: 76, time: beat * 14.5, dur: beat * 1.5 },
+      { note: 79, time: beat * 16, dur: beat * 2 },
+      { note: 81, time: beat * 18, dur: beat },
+      { note: 79, time: beat * 19, dur: beat * 2 },
+      // Phrase 4 - resolve
+      { note: 76, time: beat * 21.5, dur: beat * 1.5 },
+      { note: 74, time: beat * 23, dur: beat },
+      { note: 72, time: beat * 24, dur: beat * 3 },
+    ];
+
+    // Bass - simple root notes, triangle wave
+    const bassNotes = [
+      { note: 48, time: 0, dur: beat * 6 },          // C3
+      { note: 55, time: beat * 6.5, dur: beat * 5 },  // G3
+      { note: 53, time: beat * 12, dur: beat * 5 },   // F3
+      { note: 48, time: beat * 17, dur: beat * 4 },   // C3
+      { note: 53, time: beat * 21.5, dur: beat * 3 }, // F3
+      { note: 48, time: beat * 24, dur: beat * 4 },   // C3
+    ];
+
+    melodyNotes.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, n.dur, 0.18, "square");
+    });
+
+    bassNotes.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, n.dur, 0.12, "triangle");
+    });
+
+    // Arpeggio decoration (very soft)
+    const arps = [
+      { note: 60, time: beat * 0.5 }, { note: 64, time: beat * 1 }, { note: 67, time: beat * 1.5 },
+      { note: 60, time: beat * 7 }, { note: 64, time: beat * 7.5 }, { note: 67, time: beat * 8 },
+      { note: 60, time: beat * 13 }, { note: 65, time: beat * 13.5 }, { note: 69, time: beat * 14 },
+      { note: 60, time: beat * 21 }, { note: 64, time: beat * 21.5 }, { note: 67, time: beat * 22 },
+    ];
+    arps.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, beat * 0.4, 0.06, "triangle");
+    });
+
+    const loopDuration = beat * 28;
+    loopRef.current = window.setTimeout(() => playDayLoop(), loopDuration * 1000);
+  }, [getCtx, playNote]);
+
+  // Night melody - mysterious, slower, minor pentatonic
+  const playNightLoop = useCallback(() => {
+    const { ctx } = getCtx();
+    const now = ctx.currentTime;
+    const bpm = 55;
+    const beat = 60 / bpm;
+
+    // A minor pentatonic: A4=69, C5=72, D5=74, E5=76, G5=79
+    const melodyNotes = [
+      { note: 69, time: 0, dur: beat * 2.5 },
+      { note: 72, time: beat * 3, dur: beat * 2 },
+      { note: 74, time: beat * 5.5, dur: beat * 1.5 },
+      { note: 72, time: beat * 7, dur: beat * 2.5 },
+      // Phrase 2
+      { note: 76, time: beat * 10, dur: beat * 2 },
+      { note: 74, time: beat * 12.5, dur: beat * 1.5 },
+      { note: 72, time: beat * 14, dur: beat * 2 },
+      { note: 69, time: beat * 16.5, dur: beat * 3 },
+      // Phrase 3
+      { note: 79, time: beat * 20, dur: beat * 2 },
+      { note: 76, time: beat * 22.5, dur: beat * 1.5 },
+      { note: 74, time: beat * 24, dur: beat * 2 },
+      { note: 72, time: beat * 26.5, dur: beat * 1.5 },
+      { note: 69, time: beat * 28, dur: beat * 4 },
+    ];
+
+    // Bass
+    const bassNotes = [
+      { note: 45, time: 0, dur: beat * 9 },         // A2
+      { note: 48, time: beat * 10, dur: beat * 6 },  // C3
+      { note: 50, time: beat * 16.5, dur: beat * 3 },// D3
+      { note: 45, time: beat * 20, dur: beat * 5 },  // A2
+      { note: 48, time: beat * 25, dur: beat * 3 },  // C3
+      { note: 45, time: beat * 28, dur: beat * 5 },  // A2
+    ];
+
+    melodyNotes.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, n.dur, 0.14, "square");
+    });
+
+    bassNotes.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, n.dur, 0.10, "triangle");
+    });
+
+    // Soft high arpeggios like twinkling
+    const twinkles = [
+      { note: 81, time: beat * 2 }, { note: 84, time: beat * 2.5 },
+      { note: 81, time: beat * 8 }, { note: 84, time: beat * 8.5 },
+      { note: 79, time: beat * 15 }, { note: 84, time: beat * 15.5 },
+      { note: 81, time: beat * 23 }, { note: 84, time: beat * 23.5 },
+    ];
+    twinkles.forEach(n => {
+      playNote(noteFreq(n.note), now + n.time, beat * 0.3, 0.04, "square");
+    });
+
+    const loopDuration = beat * 33;
+    loopRef.current = window.setTimeout(() => playNightLoop(), loopDuration * 1000);
+  }, [getCtx, playNote]);
 
   useEffect(() => {
     localStorage.setItem("bloom-sound-muted", String(muted));
   }, [muted]);
 
   useEffect(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    if (loopRef.current) {
+      clearTimeout(loopRef.current);
+      loopRef.current = null;
     }
     if (muted) return;
 
-    const play = () => {
+    const startTimeout = setTimeout(() => {
       if (isNight) {
-        playCricketChirp();
+        playNightLoop();
       } else {
-        playBirdChirp();
+        playDayLoop();
       }
-    };
-
-    // Random interval between sounds
-    const scheduleNext = () => {
-      const delay = isNight
-        ? 1500 + Math.random() * 2500  // crickets: more frequent
-        : 2000 + Math.random() * 4000; // birds: less frequent
-      intervalRef.current = setTimeout(() => {
-        play();
-        scheduleNext();
-      }, delay) as unknown as ReturnType<typeof setInterval>;
-    };
-
-    // Start after a short delay
-    const startTimeout = setTimeout(() => scheduleNext(), 500);
+    }, 300);
 
     return () => {
       clearTimeout(startTimeout);
-      if (intervalRef.current) clearTimeout(intervalRef.current as unknown as number);
+      if (loopRef.current) clearTimeout(loopRef.current);
     };
-  }, [muted, isNight, playBirdChirp, playCricketChirp]);
+  }, [muted, isNight, playDayLoop, playNightLoop]);
 
-  const toggleMute = useCallback(() => {
-    setMuted(prev => !prev);
-  }, []);
+  const toggleMute = useCallback(() => setMuted(prev => !prev), []);
 
   return { muted, toggleMute };
 };

@@ -20,7 +20,7 @@ const Index = () => {
   const [newTask, setNewTask] = useState("");
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { dayProgress, override, toggleOverride } = useTimeOfDay();
+  const dayProgress = useTimeOfDay();
   const isNight = dayProgress < 0.4;
   const { muted, toggleMute } = useAmbientSound(isNight);
 
@@ -61,45 +61,12 @@ const Index = () => {
       {/* Garden - full width + sound toggle */}
       <div className="w-full flex-shrink-0 relative">
         <PlantDisplay completedCount={completedCount} totalCount={tasks.length} />
-        {/* Controls */}
-        <div className="absolute top-2 right-2 flex gap-1.5">
-          {/* Day/Night toggle */}
-          <button
-            onClick={toggleOverride}
-            className="p-1.5 rounded bg-black/20 hover:bg-black/40 transition-colors"
-            title={override === null ? "Mode auto" : override === 0 ? "Nuit (forcé)" : "Jour (forcé)"}
-          >
-            <svg viewBox="0 0 16 16" className="w-5 h-5" style={{ imageRendering: "pixelated" }}>
-              {isNight ? (
-                <>
-                  {/* Moon icon */}
-                  <rect x="4" y="3" width="8" height="10" fill="hsl(50, 30%, 85%)" />
-                  <rect x="6" y="1" width="4" height="2" fill="hsl(50, 25%, 80%)" />
-                  <rect x="6" y="13" width="4" height="2" fill="hsl(50, 25%, 80%)" />
-                  <rect x="6" y="5" width="2" height="2" fill="hsl(50, 20%, 75%)" />
-                  <rect x="8" y="9" width="3" height="2" fill="hsl(50, 20%, 75%)" />
-                </>
-              ) : (
-                <>
-                  {/* Sun icon */}
-                  <rect x="5" y="4" width="6" height="8" fill="hsl(45, 95%, 65%)" />
-                  <rect x="7" y="2" width="2" height="2" fill="hsl(45, 90%, 70%)" />
-                  <rect x="7" y="12" width="2" height="2" fill="hsl(45, 90%, 70%)" />
-                  <rect x="3" y="7" width="2" height="2" fill="hsl(45, 90%, 70%)" />
-                  <rect x="11" y="7" width="2" height="2" fill="hsl(45, 90%, 70%)" />
-                </>
-              )}
-              {override !== null && (
-                <rect x="12" y="12" width="3" height="3" fill="hsl(120, 60%, 55%)" />
-              )}
-            </svg>
-          </button>
-          {/* Sound toggle */}
-          <button
-            onClick={toggleMute}
-            className="p-1.5 rounded bg-black/20 hover:bg-black/40 transition-colors"
-            title={muted ? "Activer le son" : "Couper le son"}
-          >
+        {/* Sound toggle */}
+        <button
+          onClick={toggleMute}
+          className="absolute top-2 right-2 p-1.5 rounded bg-black/20 hover:bg-black/40 transition-colors"
+          title={muted ? "Activer le son" : "Couper le son"}
+        >
             <svg viewBox="0 0 16 16" className="w-5 h-5" style={{ imageRendering: "pixelated" }}>
               <rect x="2" y="5" width="3" height="6" fill="white" />
               <rect x="5" y="3" width="2" height="10" fill="white" />
@@ -119,9 +86,8 @@ const Index = () => {
                   <rect x="14" y="4" width="1" height="8" fill="hsl(120, 50%, 60%)" opacity={0.6} />
                 </>
               )}
-            </svg>
-          </button>
-        </div>
+          </svg>
+        </button>
       </div>
 
       {/* Task list - scrollable */}
