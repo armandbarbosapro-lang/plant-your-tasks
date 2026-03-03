@@ -103,7 +103,8 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
     return seed % PLANT_TEMPLATES.length;
   }, [totalCount]);
 
-  const stage = completedCount;
+  // Map completion ratio to 12 stages so even 2/2 tasks = full bloom
+  const stage = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 12);
 
   if (totalCount === 0 || completedCount === 0) {
     return (
