@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Trash2 } from "lucide-react";
 import PlantDisplay from "@/components/PlantDisplay";
+import useTimeOfDay from "@/hooks/useTimeOfDay";
+import useAmbientSound from "@/hooks/useAmbientSound";
 
 interface Task {
   id: string;
@@ -18,6 +20,9 @@ const Index = () => {
   const [newTask, setNewTask] = useState("");
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dayProgress = useTimeOfDay();
+  const isNight = dayProgress < 0.4;
+  const { muted, toggleMute } = useAmbientSound(isNight);
 
   useEffect(() => {
     localStorage.setItem("bloom-tasks", JSON.stringify(tasks));
@@ -53,9 +58,39 @@ const Index = () => {
 
   return (
     <div className="h-[100dvh] bg-background flex flex-col items-center overflow-hidden">
-      {/* Garden - full width, no frame */}
-      <div className="w-full flex-shrink-0">
+      {/* Garden - full width + sound toggle */}
+      <div className="w-full flex-shrink-0 relative">
         <PlantDisplay completedCount={completedCount} totalCount={tasks.length} />
+        {/* Sound toggle */}
+        <button
+          onClick={toggleMute}
+          className="absolute top-2 right-2 p-1.5 rounded bg-black/20 hover:bg-black/40 transition-colors"
+          title={muted ? "Activer le son" : "Couper le son"}
+        >
+          <svg viewBox="0 0 16 16" className="w-5 h-5" style={{ imageRendering: "pixelated" }}>
+            {/* Speaker */}
+            <rect x="2" y="5" width="3" height="6" fill="white" />
+            <rect x="5" y="3" width="2" height="10" fill="white" />
+            <rect x="7" y="1" width="2" height="14" fill="white" />
+            {muted ? (
+              <>
+                {/* X mark */}
+                <rect x="11" y="4" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+                <rect x="13" y="6" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+                <rect x="11" y="8" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+                <rect x="13" y="10" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+                <rect x="11" y="10" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+                <rect x="13" y="4" width="2" height="2" fill="hsl(0, 70%, 55%)" />
+              </>
+            ) : (
+              <>
+                {/* Sound waves */}
+                <rect x="11" y="6" width="2" height="4" fill="hsl(120, 50%, 60%)" />
+                <rect x="14" y="4" width="1" height="8" fill="hsl(120, 50%, 60%)" opacity={0.6} />
+              </>
+            )}
+          </svg>
+        </button>
       </div>
 
       {/* Task list - scrollable */}
