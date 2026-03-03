@@ -9,7 +9,127 @@ const R = (x: number, y: number, w: number, h: number, fill: string) => (
   <rect x={x} y={y} width={w} height={h} fill={fill} />
 );
 
+// Magical Garden Rose - a fantastical pixel flower with multiple blooms
+const MagicalGardenRose = (s: number) => (
+  <g key="garden-rose">
+    {/* Soil / ground */}
+    {s >= 1 && <>{R(20, 118, 56, 6, "hsl(30, 40%, 28%)")}{R(24, 116, 48, 4, "hsl(30, 35%, 32%)")}</>}
+    {/* Root sprout */}
+    {s >= 1 && R(46, 108, 4, 10, "hsl(130, 45%, 32%)")}
+    {/* Main stem grows */}
+    {s >= 2 && R(46, 94, 4, 14, "hsl(130, 48%, 35%)")}
+    {s >= 3 && R(46, 78, 4, 16, "hsl(130, 50%, 36%)")}
+    {/* First leaves */}
+    {s >= 3 && <>
+      {R(34, 96, 12, 4, "hsl(130, 55%, 40%)")}
+      {R(50, 88, 12, 4, "hsl(130, 55%, 40%)")}
+      {R(30, 94, 4, 4, "hsl(130, 50%, 38%)")}
+      {R(62, 86, 4, 4, "hsl(130, 50%, 38%)")}
+    </>}
+    {/* Stem continues upward */}
+    {s >= 4 && R(46, 62, 4, 16, "hsl(130, 52%, 37%)")}
+    {/* More leaves */}
+    {s >= 4 && <>
+      {R(34, 74, 12, 4, "hsl(140, 55%, 42%)")}
+      {R(50, 68, 12, 4, "hsl(140, 55%, 42%)")}
+      {R(30, 72, 4, 4, "hsl(140, 50%, 40%)")}
+      {R(62, 66, 4, 4, "hsl(140, 50%, 40%)")}
+    </>}
+    {/* Side stems branch out */}
+    {s >= 5 && <>
+      {R(38, 62, 4, 4, "hsl(130, 48%, 34%)")}
+      {R(34, 58, 4, 8, "hsl(130, 48%, 34%)")}
+      {R(54, 58, 4, 4, "hsl(130, 48%, 34%)")}
+      {R(58, 54, 4, 8, "hsl(130, 48%, 34%)")}
+    </>}
+    {/* Stem to top */}
+    {s >= 5 && R(46, 48, 4, 14, "hsl(130, 52%, 37%)")}
+    {/* Left bud forming */}
+    {s >= 6 && <>
+      {R(26, 50, 12, 10, "hsl(340, 60%, 50%)")}
+      {R(28, 48, 8, 4, "hsl(340, 55%, 55%)")}
+    </>}
+    {/* Right bud forming */}
+    {s >= 6 && <>
+      {R(58, 46, 12, 10, "hsl(340, 60%, 50%)")}
+      {R(60, 44, 8, 4, "hsl(340, 55%, 55%)")}
+    </>}
+    {/* Center bud */}
+    {s >= 7 && <>
+      {R(40, 36, 16, 12, "hsl(350, 65%, 55%)")}
+      {R(42, 32, 12, 6, "hsl(350, 60%, 60%)")}
+    </>}
+    {/* Blooms expand - left */}
+    {s >= 8 && <>
+      {R(20, 44, 20, 16, "hsl(345, 65%, 55%)")}
+      {R(22, 42, 16, 4, "hsl(345, 60%, 60%)")}
+      {R(24, 40, 12, 4, "hsl(345, 55%, 65%)")}
+      {R(18, 48, 4, 8, "hsl(340, 60%, 50%)")}
+    </>}
+    {/* Blooms expand - right */}
+    {s >= 8 && <>
+      {R(56, 40, 20, 16, "hsl(345, 65%, 55%)")}
+      {R(58, 38, 16, 4, "hsl(345, 60%, 60%)")}
+      {R(60, 36, 12, 4, "hsl(345, 55%, 65%)")}
+      {R(74, 44, 4, 8, "hsl(340, 60%, 50%)")}
+    </>}
+    {/* Center bloom large */}
+    {s >= 9 && <>
+      {R(34, 26, 28, 18, "hsl(350, 70%, 58%)")}
+      {R(38, 22, 20, 6, "hsl(350, 65%, 63%)")}
+      {R(42, 18, 12, 6, "hsl(350, 60%, 68%)")}
+      {R(32, 30, 4, 10, "hsl(340, 60%, 52%)")}
+      {R(60, 30, 4, 10, "hsl(340, 60%, 52%)")}
+    </>}
+    {/* Extra small flowers on sides */}
+    {s >= 10 && <>
+      {R(10, 52, 10, 8, "hsl(30, 75%, 60%)")}
+      {R(12, 50, 6, 4, "hsl(40, 80%, 65%)")}
+      {R(76, 48, 10, 8, "hsl(30, 75%, 60%)")}
+      {R(78, 46, 6, 4, "hsl(40, 80%, 65%)")}
+      {/* Extra leaves */}
+      {R(14, 60, 8, 4, "hsl(140, 50%, 42%)")}
+      {R(74, 56, 8, 4, "hsl(140, 50%, 42%)")}
+    </>}
+    {/* Top crown petals */}
+    {s >= 11 && <>
+      {R(36, 14, 24, 8, "hsl(355, 75%, 62%)")}
+      {R(40, 10, 16, 6, "hsl(355, 70%, 68%)")}
+      {R(44, 6, 8, 6, "hsl(0, 70%, 72%)")}
+      {/* Side crown */}
+      {R(14, 38, 10, 10, "hsl(350, 68%, 58%)")}
+      {R(72, 34, 10, 10, "hsl(350, 68%, 58%)")}
+      {R(16, 36, 6, 4, "hsl(350, 62%, 64%)")}
+      {R(74, 32, 6, 4, "hsl(350, 62%, 64%)")}
+    </>}
+    {/* Final sparkles and details */}
+    {s >= 12 && <>
+      {/* Golden pollen centers */}
+      {R(44, 30, 8, 6, "hsl(45, 90%, 65%)")}
+      {R(28, 48, 6, 4, "hsl(45, 90%, 65%)")}
+      {R(64, 44, 6, 4, "hsl(45, 90%, 65%)")}
+      {/* Sparkles */}
+      {R(8, 36, 4, 4, "hsl(50, 95%, 82%)")}
+      {R(84, 30, 4, 4, "hsl(50, 95%, 82%)")}
+      {R(46, 2, 4, 4, "hsl(50, 95%, 85%)")}
+      {R(20, 16, 4, 4, "hsl(50, 95%, 82%)")}
+      {R(72, 12, 4, 4, "hsl(50, 95%, 82%)")}
+      {/* Butterflies */}
+      {R(6, 24, 6, 4, "hsl(280, 70%, 70%)")}
+      {R(4, 22, 4, 4, "hsl(280, 65%, 75%)")}
+      {R(86, 18, 6, 4, "hsl(200, 70%, 65%)")}
+      {R(88, 16, 4, 4, "hsl(200, 65%, 70%)")}
+      {/* Tiny floating petals */}
+      {R(16, 8, 4, 4, "hsl(345, 60%, 70%)")}
+      {R(76, 6, 4, 4, "hsl(345, 60%, 70%)")}
+      {R(34, 2, 4, 4, "hsl(0, 65%, 72%)")}
+      {R(58, 4, 4, 4, "hsl(0, 65%, 72%)")}
+    </>}
+  </g>
+);
+
 const PLANT_TEMPLATES = [
+  MagicalGardenRose,
   // Crystal Tree
   (s: number) => (
     <g key="crystal">
@@ -103,16 +223,15 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
     return seed % PLANT_TEMPLATES.length;
   }, [totalCount]);
 
-  // Map completion ratio to 12 stages so even 2/2 tasks = full bloom
   const stage = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 12);
 
   if (totalCount === 0 || completedCount === 0) {
     return (
       <div className="flex flex-col items-center">
         <div className="w-48 h-48 flex items-center justify-center">
-          <svg viewBox="0 0 96 96" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
-            <rect x="42" y="84" width="12" height="8" fill="hsl(30, 40%, 45%)" />
-            <rect x="44" y="82" width="8" height="2" fill="hsl(30, 35%, 40%)" />
+          <svg viewBox="0 0 96 128" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
+            <rect x="42" y="114" width="12" height="8" fill="hsl(30, 40%, 28%)" />
+            <rect x="44" y="112" width="8" height="2" fill="hsl(30, 35%, 32%)" />
           </svg>
         </div>
       </div>
@@ -124,7 +243,7 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
   return (
     <div className="flex flex-col items-center">
       <div className="w-48 h-48 flex items-center justify-center">
-        <svg viewBox="0 0 96 96" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
+        <svg viewBox="0 0 96 128" className="w-full h-full" style={{ imageRendering: "pixelated" }}>
           {renderPlant(stage)}
         </svg>
       </div>
