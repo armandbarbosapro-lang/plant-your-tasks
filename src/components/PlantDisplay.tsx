@@ -476,24 +476,24 @@ const PlantDisplay: React.FC<PlantDisplayProps> = ({ completedCount, totalCount 
         {/* Pond */}
         <Pond x={8} y={112} w={42} h={12} isNight={isNight} />
 
-        {/* Glowing flowers (glow at night) */}
-        <GlowingFlower x={58} y={100} color="hsl(280, 55%, 60%)" glowColor="hsl(280, 70%, 75%)" isNight={isNight} />
-        <GlowingFlower x={150} y={98} color="hsl(200, 55%, 60%)" glowColor="hsl(200, 80%, 78%)" isNight={isNight} />
-        <GlowingFlower x={170} y={104} color="hsl(320, 60%, 55%)" glowColor="hsl(320, 70%, 72%)" isNight={isNight} />
+        {/* Glowing flowers (glow at night) - varied sizes, kept away from edges */}
+        <GlowingFlower x={60} y={100} color="hsl(280, 55%, 60%)" glowColor="hsl(280, 70%, 75%)" isNight={isNight} />
+        <GlowingFlower x={140} y={100} color="hsl(200, 55%, 60%)" glowColor="hsl(200, 80%, 78%)" isNight={isNight} />
+        <GlowingFlower x={158} y={106} color="hsl(320, 60%, 55%)" glowColor="hsl(320, 70%, 72%)" isNight={isNight} />
 
-        {/* Regular flowers */}
-        <GroundFlower x={135} y={102} color={isNight ? "hsl(45, 50%, 35%)" : "hsl(45, 80%, 60%)"} />
-        <GroundFlower x={28} y={96} color={isNight ? "hsl(10, 40%, 32%)" : "hsl(10, 70%, 58%)"} />
-        <GroundFlower x={112} y={100} color={isNight ? "hsl(340, 35%, 30%)" : "hsl(340, 65%, 60%)"} />
-        <GroundFlower x={42} y={98} color={isNight ? "hsl(55, 40%, 30%)" : "hsl(55, 75%, 55%)"} />
+        {/* Regular flowers - spread within safe zone (x: 30-165) */}
+        <GroundFlower x={130} y={102} color={isNight ? "hsl(45, 50%, 35%)" : "hsl(45, 80%, 60%)"} />
+        <GroundFlower x={38} y={98} color={isNight ? "hsl(10, 40%, 32%)" : "hsl(10, 70%, 58%)"} />
+        <GroundFlower x={110} y={100} color={isNight ? "hsl(340, 35%, 30%)" : "hsl(340, 65%, 60%)"} />
+        <GroundFlower x={50} y={102} color={isNight ? "hsl(55, 40%, 30%)" : "hsl(55, 75%, 55%)"} />
 
-        {/* Tall grass */}
-        <TallGrass x={54} y={92} delay={0} isNight={isNight} />
-        <TallGrass x={68} y={94} delay={0.5} isNight={isNight} />
-        <TallGrass x={128} y={92} delay={1} isNight={isNight} />
-        <TallGrass x={142} y={96} delay={0.3} isNight={isNight} />
-        <TallGrass x={8} y={94} delay={0.8} isNight={isNight} />
-        <TallGrass x={178} y={92} delay={1.2} isNight={isNight} />
+        {/* Tall grass - kept within safe margins */}
+        <TallGrass x={56} y={92} delay={0} isNight={isNight} />
+        <TallGrass x={70} y={94} delay={0.5} isNight={isNight} />
+        <TallGrass x={125} y={92} delay={1} isNight={isNight} />
+        <TallGrass x={138} y={96} delay={0.3} isNight={isNight} />
+        <TallGrass x={34} y={96} delay={0.8} isNight={isNight} />
+        <TallGrass x={162} y={94} delay={1.2} isNight={isNight} />
         <TallGrass x={100} y={96} delay={0.6} isNight={isNight} />
 
         {/* PLANT or EMPTY POT */}
