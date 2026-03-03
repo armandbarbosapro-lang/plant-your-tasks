@@ -108,64 +108,118 @@ const useAmbientSound = (isNight: boolean) => {
     loopRef.current = window.setTimeout(() => playDayLoop(), loopDuration * 1000);
   }, [getCtx, playNote]);
 
-  // Night melody - mysterious, slower, minor pentatonic
+  // Night ambiance - crickets base + occasional owl/wind/forest sounds
+  const playCrickets = useCallback((startTime: number, duration: number) => {
+    const { ctx, gain } = getCtx();
+    // Soft continuous cricket chirps
+    const chirpInterval = 0.15;
+    const numChirps = Math.floor(duration / chirpInterval);
+    for (let i = 0; i < numChirps; i++) {
+      const t = startTime + i * chirpInterval;
+      // Alternate between two cricket pitches
+      const freq = i % 6 < 3 ? 4200 : 4500;
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.setValueAtTime(freq + Math.random() * 100, t);
+      env.gain.setValueAtTime(0, t);
+      env.gain.linearRampToValueAtTime(0.04, t + 0.01);
+      env.gain.linearRampToValueAtTime(0, t + 0.06);
+      osc.connect(env);
+      env.connect(gain);
+      osc.start(t);
+      osc.stop(t + 0.07);
+    }
+  }, [getCtx]);
+
+  const playOwlHoot = useCallback((startTime: number) => {
+    const { ctx, gain } = getCtx();
+    // "Hou-houuu" - two descending tones
+    const osc1 = ctx.createOscillator();
+    const env1 = ctx.createGain();
+    osc1.type = "triangle";
+    osc1.frequency.setValueAtTime(420, startTime);
+    osc1.frequency.linearRampToValueAtTime(380, startTime + 0.3);
+    env1.gain.setValueAtTime(0, startTime);
+    env1.gain.linearRampToValueAtTime(0.12, startTime + 0.05);
+    env1.gain.setValueAtTime(0.12, startTime + 0.2);
+    env1.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+    osc1.connect(env1);
+    env1.connect(gain);
+    osc1.start(startTime);
+    osc1.stop(startTime + 0.4);
+
+    // Second longer "houuuu"
+    const osc2 = ctx.createOscillator();
+    const env2 = ctx.createGain();
+    osc2.type = "triangle";
+    osc2.frequency.setValueAtTime(350, startTime + 0.5);
+    osc2.frequency.linearRampToValueAtTime(300, startTime + 1.2);
+    env2.gain.setValueAtTime(0, startTime + 0.5);
+    env2.gain.linearRampToValueAtTime(0.14, startTime + 0.55);
+    env2.gain.setValueAtTime(0.14, startTime + 0.9);
+    env2.gain.exponentialRampToValueAtTime(0.001, startTime + 1.3);
+    osc2.connect(env2);
+    env2.connect(gain);
+    osc2.start(startTime + 0.5);
+    osc2.stop(startTime + 1.3);
+  }, [getCtx]);
+
+  const playWindGust = useCallback((startTime: number) => {
+    const { ctx, gain } = getCtx();
+    // White noise filtered to sound like wind
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(400, startTime);
+    filter.frequency.linearRampToValueAtTime(800, startTime + 1);
+    filter.frequency.linearRampToValueAtTime(300, startTime + 2.5);
+
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, startTime);
+    env.gain.linearRampToValueAtTime(0.06, startTime + 0.8);
+    env.gain.setValueAtTime(0.06, startTime + 1.5);
+    env.gain.linearRampToValueAtTime(0, startTime + 2.5);
+
+    noise.connect(filter);
+    filter.connect(env);
+    env.connect(gain);
+    noise.start(startTime);
+    noise.stop(startTime + 2.5);
+  }, [getCtx]);
+
   const playNightLoop = useCallback(() => {
     const { ctx } = getCtx();
     const now = ctx.currentTime;
-    const bpm = 55;
-    const beat = 60 / bpm;
+    const loopDuration = 12; // 12 seconds per loop
 
-    // A minor pentatonic: A4=69, C5=72, D5=74, E5=76, G5=79
-    const melodyNotes = [
-      { note: 69, time: 0, dur: beat * 2.5 },
-      { note: 72, time: beat * 3, dur: beat * 2 },
-      { note: 74, time: beat * 5.5, dur: beat * 1.5 },
-      { note: 72, time: beat * 7, dur: beat * 2.5 },
-      // Phrase 2
-      { note: 76, time: beat * 10, dur: beat * 2 },
-      { note: 74, time: beat * 12.5, dur: beat * 1.5 },
-      { note: 72, time: beat * 14, dur: beat * 2 },
-      { note: 69, time: beat * 16.5, dur: beat * 3 },
-      // Phrase 3
-      { note: 79, time: beat * 20, dur: beat * 2 },
-      { note: 76, time: beat * 22.5, dur: beat * 1.5 },
-      { note: 74, time: beat * 24, dur: beat * 2 },
-      { note: 72, time: beat * 26.5, dur: beat * 1.5 },
-      { note: 69, time: beat * 28, dur: beat * 4 },
-    ];
+    // Continuous crickets
+    playCrickets(now, loopDuration);
 
-    // Bass
-    const bassNotes = [
-      { note: 45, time: 0, dur: beat * 9 },         // A2
-      { note: 48, time: beat * 10, dur: beat * 6 },  // C3
-      { note: 50, time: beat * 16.5, dur: beat * 3 },// D3
-      { note: 45, time: beat * 20, dur: beat * 5 },  // A2
-      { note: 48, time: beat * 25, dur: beat * 3 },  // C3
-      { note: 45, time: beat * 28, dur: beat * 5 },  // A2
-    ];
+    // Random events
+    const r = Math.random();
+    if (r < 0.3) {
+      // Owl hoot
+      playOwlHoot(now + 2 + Math.random() * 4);
+    } else if (r < 0.55) {
+      // Wind gust
+      playWindGust(now + 1 + Math.random() * 3);
+    }
+    // Sometimes both
+    if (Math.random() < 0.15) {
+      playOwlHoot(now + 8 + Math.random() * 2);
+    }
 
-    melodyNotes.forEach(n => {
-      playNote(noteFreq(n.note), now + n.time, n.dur, 0.14, "square");
-    });
-
-    bassNotes.forEach(n => {
-      playNote(noteFreq(n.note), now + n.time, n.dur, 0.10, "triangle");
-    });
-
-    // Soft high arpeggios like twinkling
-    const twinkles = [
-      { note: 81, time: beat * 2 }, { note: 84, time: beat * 2.5 },
-      { note: 81, time: beat * 8 }, { note: 84, time: beat * 8.5 },
-      { note: 79, time: beat * 15 }, { note: 84, time: beat * 15.5 },
-      { note: 81, time: beat * 23 }, { note: 84, time: beat * 23.5 },
-    ];
-    twinkles.forEach(n => {
-      playNote(noteFreq(n.note), now + n.time, beat * 0.3, 0.04, "square");
-    });
-
-    const loopDuration = beat * 33;
     loopRef.current = window.setTimeout(() => playNightLoop(), loopDuration * 1000);
-  }, [getCtx, playNote]);
+  }, [getCtx, playCrickets, playOwlHoot, playWindGust]);
 
   useEffect(() => {
     localStorage.setItem("bloom-sound-muted", String(muted));
