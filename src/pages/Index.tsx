@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Plus, X, Trash2 } from "lucide-react";
 import PlantDisplay from "@/components/PlantDisplay";
 
@@ -17,10 +17,22 @@ const Index = () => {
   });
   const [newTask, setNewTask] = useState("");
   const [showInput, setShowInput] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     localStorage.setItem("bloom-tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    if (showInput && inputRef.current) {
+      // Small delay to let layout settle before focusing
+      setTimeout(() => {
+        inputRef.current?.focus();
+        // Scroll the input into view without moving the whole page
+        inputRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 100);
+    }
+  }, [showInput]);
 
   const addTask = () => {
     if (!newTask.trim() || tasks.length >= MAX_TASKS) return;
@@ -44,14 +56,14 @@ const Index = () => {
   const completedCount = tasks.filter(t => t.done).length;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center px-4 py-8 max-w-md mx-auto">
+    <div className="h-[100dvh] bg-background flex flex-col items-center px-4 py-6 max-w-md mx-auto overflow-hidden">
       {/* Plant */}
-      <div className="mb-8 mt-6">
+      <div className="mb-4 mt-2 flex-shrink-0">
         <PlantDisplay completedCount={completedCount} totalCount={tasks.length} />
       </div>
 
-      {/* Task list */}
-      <div className="w-full space-y-2 mb-4">
+      {/* Task list - scrollable */}
+      <div className="w-full flex-1 overflow-y-auto overflow-x-hidden space-y-2 mb-3 min-h-0">
         {tasks.map(task => (
           <div
             key={task.id}
@@ -84,47 +96,50 @@ const Index = () => {
         ))}
       </div>
 
-      {/* Add task */}
-      {showInput ? (
-        <div className="w-full flex gap-2">
-          <input
-            autoFocus
-            value={newTask}
-            onChange={e => setNewTask(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && addTask()}
-            placeholder="Nouvelle tâche..."
-            maxLength={50}
-            className="flex-1 px-4 py-3 rounded-xl border border-input bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <button
-            onClick={addTask}
-            className="px-4 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold"
-          >
-            OK
-          </button>
-        </div>
-      ) : (
-        tasks.length < MAX_TASKS && (
-          <button
-            onClick={() => setShowInput(true)}
-            className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-muted-foreground/30 text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Ajouter
-          </button>
-        )
-      )}
+      {/* Bottom section - fixed */}
+      <div className="w-full flex-shrink-0 space-y-3">
+        {/* Add task */}
+        {showInput ? (
+          <div className="w-full flex gap-2">
+            <input
+              ref={inputRef}
+              value={newTask}
+              onChange={e => setNewTask(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && addTask()}
+              placeholder="Nouvelle tâche..."
+              maxLength={50}
+              className="flex-1 px-4 py-3 rounded-xl border border-input bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <button
+              onClick={addTask}
+              className="px-4 py-3 rounded-xl bg-primary text-primary-foreground text-sm font-semibold"
+            >
+              OK
+            </button>
+          </div>
+        ) : (
+          tasks.length < MAX_TASKS && (
+            <button
+              onClick={() => setShowInput(true)}
+              className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-muted-foreground/30 text-muted-foreground text-sm hover:border-primary hover:text-primary transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Ajouter
+            </button>
+          )
+        )}
 
-      {/* Clear all */}
-      {tasks.length > 0 && (
-        <button
-          onClick={clearAll}
-          className="mt-6 flex items-center gap-1 text-xs text-muted-foreground/50 hover:text-destructive transition-colors"
-        >
-          <Trash2 className="w-3 h-3" />
-          Effacer
-        </button>
-      )}
+        {/* Clear all */}
+        {tasks.length > 0 && (
+          <button
+            onClick={clearAll}
+            className="w-full flex items-center justify-center gap-1 text-xs text-muted-foreground/50 hover:text-destructive transition-colors"
+          >
+            <Trash2 className="w-3 h-3" />
+            Effacer
+          </button>
+        )}
+      </div>
     </div>
   );
 };
