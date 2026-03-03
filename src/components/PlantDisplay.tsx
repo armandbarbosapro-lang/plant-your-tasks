@@ -1,5 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
+import useTimeOfDay from "@/hooks/useTimeOfDay";
 
 interface PlantDisplayProps {
   completedCount: number;
@@ -9,21 +10,6 @@ interface PlantDisplayProps {
 const R = (x: number, y: number, w: number, h: number, fill: string) => (
   <rect x={x} y={y} width={w} height={h} fill={fill} />
 );
-
-// Time of day: 0=night, 0.5=day, 1=night (smooth cycle)
-const useTimeOfDay = () => {
-  const [hour, setHour] = useState(new Date().getHours());
-  useEffect(() => {
-    const interval = setInterval(() => setHour(new Date().getHours()), 60000);
-    return () => clearInterval(interval);
-  }, []);
-  // Returns 0-1 where 0=full night, 1=full day
-  // Night: 21-5, Day: 9-17, transitions: 5-9 and 17-21
-  if (hour >= 9 && hour < 17) return 1; // full day
-  if (hour >= 21 || hour < 5) return 0; // full night
-  if (hour >= 5 && hour < 9) return (hour - 5) / 4; // sunrise
-  return 1 - (hour - 17) / 4; // sunset
-};
 
 // ===== PIXEL SUN =====
 const PixelSun = ({ dayProgress }: { dayProgress: number }) => {
